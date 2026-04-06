@@ -3,203 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Affan Champion OS v3.0 | Professional Journal</title>
+    <title>Affan's Professional Journal v3.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg: #0d1117;
-            --sidebar: #161b22;
-            --card: #0d1117;
-            --border: #30363d;
-            --primary: #58a6ff;
-            --success: #238636;
-            --danger: #da3633;
-            --warning: #d29922;
-            --text: #c9d1d9;
-            --text-dim: #8b949e;
+            --bg: #0d1117; --sidebar: #161b22; --card: #0d1117; --border: #30363d;
+            --primary: #58a6ff; --success: #3fb950; --danger: #f85149; --warning: #d29922;
+            --text: #c9d1d9; --text-dim: #8b949e; --row-alt: #1c2128;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
 
-        /* Sidebar */
-        aside { width: 240px; background: var(--sidebar); border-right: 1px solid var(--border); padding: 25px 15px; display: flex; flex-direction: column; }
-        .brand { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; color: var(--primary); letter-spacing: 1px; padding-bottom: 25px; border-bottom: 1px solid var(--border); margin-bottom: 25px; text-align: center; }
-        .nav-item { padding: 12px 18px; border-radius: 6px; cursor: pointer; color: var(--text-dim); display: flex; align-items: center; gap: 12px; margin-bottom: 8px; transition: 0.2s; font-size: 14px; }
-        .nav-item:hover, .nav-item.active { background: #21262d; color: var(--primary); }
+        /* Mobile Sidebar Toggle */
+        .menu-toggle { display: none; position: fixed; top: 15px; left: 15px; z-index: 1001; background: var(--primary); color: #000; padding: 10px; border-radius: 5px; cursor: pointer; }
 
-        /* Main Content */
-        main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-        
-        /* Stats Top Bar */
-        .top-bar { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; padding: 20px; background: #010409; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
-        .stat-card { background: var(--card); padding: 15px; border-radius: 6px; border: 1px solid var(--border); }
-        .stat-card span { font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 8px; }
+        /* Sidebar Area */
+        aside { 
+            width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); 
+            padding: 20px; display: flex; flex-direction: column; transition: 0.3s ease;
+            z-index: 1000;
+        }
+        .brand { font-family: 'Poppins', sans-serif; color: var(--primary); font-size: 18px; margin-bottom: 30px; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+        .nav-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; color: var(--text-dim); display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 14px; }
+        .nav-item:hover, .nav-item.active { background: #21262d; color: var(--primary); border: 1px solid var(--border); }
+
+        /* Main Content Area */
+        main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: var(--bg); position: relative; }
+        .top-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; padding: 20px; background: #010409; border-bottom: 1px solid var(--border); }
+        .stat-card { background: var(--card); padding: 15px; border-radius: 6px; border: 1px solid var(--border); text-align: center; }
+        .stat-card span { font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 5px; }
         .stat-card div { font-size: 18px; font-weight: 700; }
 
-        .section { padding: 25px; display: none; }
+        .section { padding: 20px; display: none; }
         .section.active { display: block; }
 
-        /* Form Controls */
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px; background: var(--sidebar); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 25px; }
-        input { background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 4px; width: 100%; outline: none; font-size: 13px; }
-        .btn-exec { background: var(--success); color: #fff; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 15px; }
+        /* TABLE - IMAGE MATCH A to Z */
+        .summary-table-wrap { overflow-x: auto; margin-top: 20px; }
+        .summary-table { width: 100%; border-collapse: collapse; min-width: 900px; font-size: 12px; background: #0d1117; }
+        .summary-table th { background: #161b22; color: var(--primary); padding: 12px; border: 1px solid var(--border); text-align: center; }
+        .summary-table td { padding: 10px; border: 1px solid var(--border); text-align: center; font-weight: 500; }
+        .label-cell { text-align: left !important; background: #161b22; color: var(--text-dim); font-weight: 600; width: 220px; }
+        .win-text { color: var(--success); }
+        .loss-text { color: var(--danger); }
+        .be-text { color: var(--warning); }
+        .zebra tr:nth-child(even) { background: #11161d; }
 
-        /* Table */
-        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 1000px; }
-        th { background: #161b22; padding: 12px; text-align: left; color: var(--text-dim); border-bottom: 1px solid var(--border); }
-        td { padding: 12px; border-bottom: 1px solid var(--border); }
-        .badge { padding: 3px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
-        .bg-win { background: rgba(35, 134, 54, 0.2); color: #3fb950; }
-        .bg-loss { background: rgba(218, 54, 51, 0.2); color: #f85149; }
-        .bg-rf { background: rgba(210, 153, 34, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+        /* FORMS */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; background: var(--sidebar); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; }
+        input, select { background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 4px; width: 100%; outline: none; }
+        .btn-p { background: var(--primary); color: #000; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 700; }
 
-        /* Excel Summary */
-        .excel-summary { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); margin-top: 20px; }
-        .excel-summary th { background: #1f2937; color: var(--primary); border: 1px solid var(--border); text-align: center; padding: 12px; }
-        .excel-summary td { border: 1px solid var(--border); padding: 12px; text-align: center; }
-        .row-label { text-align: left !important; font-weight: bold; background: #161b22; width: 220px; }
-
-        /* Help Section */
-        .help-box { background: var(--sidebar); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .help-box h3 { color: var(--primary); margin-bottom: 10px; font-family: 'Poppins', sans-serif; font-size: 16px; }
-        .formula-tag { background: #010409; padding: 8px; border-radius: 4px; color: var(--warning); font-family: monospace; display: block; margin: 10px 0; font-size: 13px; }
+        /* Mobile View Sidebar Fix */
+        @media (max-width: 768px) {
+            aside { position: fixed; left: -260px; height: 100%; }
+            aside.open { left: 0; }
+            .menu-toggle { display: block; }
+            .top-bar { grid-template-columns: 1fr 1fr; margin-top: 50px; }
+            .label-cell { width: 150px; }
+        }
     </style>
 </head>
 <body>
 
-    <aside>
-        <div class="brand">AFFAN CHAMPION OS</div>
-        <div class="nav-item active" onclick="tab('dash')"><i class="fas fa-chart-line"></i> Dashboard</div>
+    <div class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+
+    <aside id="sidebar">
+        <div class="brand">AFFAN'S OS v3.0</div>
+        <div class="nav-item active" onclick="tab('dash')"><i class="fas fa-dashboard"></i> Dashboard</div>
         <div class="nav-item" onclick="tab('logs')"><i class="fas fa-list"></i> Trade Logs</div>
-        <div class="nav-item" onclick="tab('sum')"><i class="fas fa-table"></i> Summary Sheet</div>
-        <div class="nav-item" onclick="tab('help')"><i class="fas fa-info-circle"></i> Help & Metrics</div>
+        <div class="nav-item" onclick="tab('sum')"><i class="fas fa-table"></i> Summary (A-Z)</div>
         <div class="nav-item" onclick="tab('set')"><i class="fas fa-cog"></i> Settings</div>
+        <div style="margin-top:auto">
+            <button class="nav-item" style="background:none; width:100%;" onclick="exportXLS()"><i class="fas fa-file-excel"></i> Export to XLS</button>
+        </div>
     </aside>
 
     <main>
         <div class="top-bar">
-            <div class="stat-card"><span>Win Rate</span><div id="top-wr">0%</div></div>
-            <div class="stat-card"><span>Expectancy</span><div id="top-exp">0.00R</div></div>
-            <div class="stat-card"><span>Intensity (₹)</span><div id="top-int" style="color:var(--success)">₹0</div></div>
-            <div class="stat-card"><span>Open Risk (TOR)</span><div id="top-tor" style="color:var(--warning)">0.00R</div></div>
-            <div class="stat-card"><span>Avg ARR</span><div id="top-arr">0.00</div></div>
+            <div class="stat-card"><span>Win Rate</span><div id="t-wr">0%</div></div>
+            <div class="stat-card"><span>Expectancy</span><div id="t-exp">0.00R</div></div>
+            <div class="stat-card"><span>Intensity</span><div id="t-int">0.00R</div></div>
+            <div class="stat-card"><span>Total TOR</span><div id="t-tor">0.00R</div></div>
+            <div class="stat-card"><span>Net Profit</span><div id="t-profit" class="win-text">₹0</div></div>
         </div>
 
-        <!-- LOGS SECTION -->
-        <section id="logs" class="section active">
+        <!-- TRADE LOGS -->
+        <section id="logs" class="section">
             <div class="form-grid">
-                <div><label style="font-size:10px; color:var(--text-dim)">DATE</label><input type="date" id="t-date"></div>
-                <div><label style="font-size:10px; color:var(--text-dim)">SYMBOL</label><input type="text" id="t-sym" placeholder="CCL"></div>
-                <div><label style="font-size:10px; color:var(--text-dim)">ENTRY</label><input type="number" id="t-ent"></div>
-                <div><label style="font-size:10px; color:var(--text-dim)">STOP LOSS</label><input type="number" id="t-sl"></div>
-                <div><label style="font-size:10px; color:var(--text-dim)">TARGET</label><input type="number" id="t-tg"></div>
-                <div><button class="btn-exec" onclick="addTrade()">EXECUTE</button></div>
+                <div><label style="font-size:10px">DATE</label><input type="date" id="date"></div>
+                <div><label style="font-size:10px">SYMBOL</label><input type="text" id="sym" placeholder="Stock"></div>
+                <div><label style="font-size:10px">ENTRY</label><input type="number" id="ent"></div>
+                <div><label style="font-size:10px">SL</label><input type="number" id="sl"></div>
+                <div><label style="font-size:10px">TARGET</label><input type="number" id="tg"></div>
+                <button class="btn-p" style="margin-top:15px" onclick="addTrade()">RECORD</button>
             </div>
-
-            <div class="table-wrap">
-                <table>
+            <div style="overflow-x:auto">
+                <table class="summary-table zebra">
                     <thead>
                         <tr>
-                            <th>DATE</th>
-                            <th>SYMBOL</th>
-                            <th>POSITION SIZE (₹)</th>
-                            <th>QTY</th>
-                            <th>ENTRY</th>
-                            <th>SL</th>
-                            <th>STATUS</th>
-                            <th>EXIT PRICE</th>
-                            <th>R EARNED</th>
-                            <th>ACTIONS</th>
+                            <th>DATE</th><th>SYMBOL</th><th>ENTRY</th><th>SL</th><th>STATUS</th><th>EXIT</th><th>R-EARNED</th><th>ACTION</th>
                         </tr>
                     </thead>
-                    <tbody id="tradeBody"></tbody>
+                    <tbody id="logBody"></tbody>
                 </table>
             </div>
         </section>
 
-        <!-- QUARTERLY SUMMARY SECTION -->
-        <section id="sum" class="section">
-            <h2 style="margin-bottom:20px">Quarterly Performance Audit</h2>
-            <table class="excel-summary">
-                <thead>
-                    <tr>
-                        <th class="row-label">METRICS / QUARTERS</th>
-                        <th>Q1 (JAN-MAR)</th>
-                        <th>Q2 (APR-JUN)</th>
-                        <th>Q3 (JUL-SEP)</th>
-                        <th>Q4 (OCT-DEC)</th>
-                    </tr>
-                </thead>
-                <tbody id="sumBody"></tbody>
-            </table>
+        <!-- DASHBOARD -->
+        <section id="dash" class="section active">
+            <div style="background:var(--sidebar); padding:30px; border-radius:12px; border:1px solid var(--border); text-align:center">
+                <h2 style="color:var(--primary)">Welcome, Champion Affan</h2>
+                <p style="margin-top:10px; color:var(--text-dim)">Tera system abhi <b id="health">...</b> par chal raha hai.</p>
+                <div style="font-size:50px; margin-top:20px" id="d-exp">0.00R</div>
+                <span style="font-size:12px; color:var(--text-dim)">Trade Expectancy (In R)</span>
+            </div>
         </section>
 
-        <!-- HELP SECTION -->
-        <section id="help" class="section">
-            <h2 style="margin-bottom:25px">Detailed Metrics Guide (Affan's Notes)</h2>
-            
-            <div class="help-box">
-                <h3>1. R (Risk) & Position Sizing</h3>
-                <p>R is the maximum money you risk per trade. Position size is calculated based on R and SL distance.</p>
-                <span class="formula-tag">Formula: Quantity = R / (Entry Price - Stop Loss Price)</span>
-                <p style="font-size:12px; color:var(--text-dim)">Example: R=500, Entry=500, SL=480. SL Dist=20. Qty = 500/20 = 25 Qty.</p>
-            </div>
-
-            <div class="help-box">
-                <h3>2. RR & ARR (Risk Reward Ratio)</h3>
-                <p>RR is for single trades, ARR is the average for your whole system. If ARR > 2, you are a champion.</p>
-                <span class="formula-tag">RR = (Target - Entry) / (Entry - SL) | ARR = Avg Profit (R) / Avg Loss (R)</span>
-            </div>
-
-            <div class="help-box">
-                <h3>3. Expectancy (Accuracy)</h3>
-                <p>It defines if your system is profitable or not. Should always be > 0.5R for a good system.</p>
-                <span class="formula-tag">Expectancy = (Win Rate * Avg R Gain) - (Loss Rate * Avg R Loss)</span>
-            </div>
-
-            <div class="help-box">
-                <h3>4. Intensity Metric</h3>
-                <p>The total power of your trading system at the end of the quarter.</p>
-                <span class="formula-tag">Intensity = Expectancy * No. of Trades * R</span>
-            </div>
-
-            <div class="help-box">
-                <h3>5. TOR (Total Open Risk)</h3>
-                <p>Total risk currently exposed in the market. Use 1R-3R in sideways market, max 4R-5R in bullish market.</p>
-                <span class="formula-tag">TOR = Sum of (Entry - Current SL) * Qty / Risk R</span>
+        <!-- SUMMARY PAGE (EXACT IMAGE MATCH) -->
+        <section id="sum" class="section">
+            <div class="summary-table-wrap">
+                <table class="summary-table zebra" id="xlsTable">
+                    <thead>
+                        <tr id="quarterHeader">
+                            <th class="label-cell">Metrics View (R Based)</th>
+                            <!-- Quarters will be injected -->
+                        </tr>
+                    </thead>
+                    <tbody id="summaryBody">
+                        <!-- EXACT MATCH ROWS -->
+                    </tbody>
+                </table>
             </div>
         </section>
 
         <!-- SETTINGS -->
         <section id="set" class="section">
-            <h2>Configurations</h2>
             <div class="form-grid" style="max-width:400px">
-                <div><label>MY RISK (R) IN ₹</label><input type="number" id="cfg-risk" value="500"></div>
-                <button class="btn-exec" onclick="saveSettings()">SAVE SETTINGS</button>
+                <div><label>DEFAULT RISK R (₹)</label><input type="number" id="cfg-r" value="1000"></div>
+                <button class="btn-p" onclick="saveSet()">SAVE SETTINGS</button>
             </div>
-            <button class="btn-exec" style="background:var(--danger); margin-top:30px; max-width:200px" onclick="clearDb()">RESET ALL DATA</button>
-        </section>
-
-        <!-- DASHBOARD (Simple View) -->
-        <section id="dash" class="section">
-            <h2 style="margin-bottom:20px">Affan's Trading Pulse</h2>
-            <div class="help-box" style="text-align:center">
-                <span style="font-size:12px">Current Expectancy Score</span>
-                <div id="dash-exp-big" style="font-size:60px; font-weight:bold; color:var(--primary)">0.00R</div>
-                <p id="health-msg" style="margin-top:15px; color:var(--text-dim)"></p>
-            </div>
+            <button class="btn-p" style="background:var(--danger); color:white" onclick="reset()">RESET DATABASE</button>
         </section>
     </main>
 
     <script>
-        let trades = JSON.parse(localStorage.getItem('affan_os_db')) || [];
-        let configR = localStorage.getItem('affan_r_val') || 500;
+        let trades = JSON.parse(localStorage.getItem('affan_pro_db')) || [];
+        let riskR = localStorage.getItem('affan_risk_r') || 1000;
 
-        document.getElementById('t-date').valueAsDate = new Date();
-        document.getElementById('cfg-risk').value = configR;
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
         function tab(id) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -210,169 +163,131 @@
         }
 
         function addTrade() {
-            const date = document.getElementById('t-date').value;
-            const sym = document.getElementById('t-sym').value.toUpperCase();
-            const ent = parseFloat(document.getElementById('t-ent').value);
-            const sl = parseFloat(document.getElementById('t-sl').value);
-            const tg = parseFloat(document.getElementById('t-tg').value);
+            const date = document.getElementById('date').value;
+            const sym = document.getElementById('sym').value.toUpperCase();
+            const ent = parseFloat(document.getElementById('ent').value);
+            const sl = parseFloat(document.getElementById('sl').value);
+            const tg = parseFloat(document.getElementById('tg').value);
+            if(!sym || !ent || !sl) return alert("Details bharo!");
 
-            if(!sym || isNaN(ent) || isNaN(sl)) return alert("Details bharo!");
-
-            const sl_dist = ent - sl;
-            const qty = Math.floor(configR / sl_dist);
-            const posSize = Math.floor(qty * ent);
-
-            const trade = {
-                id: Date.now(),
-                date, sym, ent, sl, tg, qty, posSize,
-                origSl: sl,
-                status: 'Open',
-                exit: null,
-                rEarned: 0,
-                isRf: false
-            };
-
-            trades.push(trade);
-            save();
-        }
-
-        function toggleRf(id) {
-            const idx = trades.findIndex(t => t.id === id);
-            const t = trades[idx];
-            if(t.status !== 'Open') return;
-            
-            t.isRf = !t.isRf;
-            t.sl = t.isRf ? t.ent : t.origSl;
+            const qty = Math.floor(riskR / (ent - sl));
+            trades.push({ id: Date.now(), date, sym, ent, sl, tg, qty, status: 'Open', exit: 0, r: 0 });
             save();
         }
 
         function closeTrade(id) {
-            const exit = parseFloat(prompt("Enter Final Exit Price:"));
+            const exit = parseFloat(prompt("Exit Price?"));
             if(isNaN(exit)) return;
             const idx = trades.findIndex(t => t.id === id);
             const t = trades[idx];
             t.exit = exit;
-            t.status = exit >= t.ent ? 'Win' : 'Loss';
-            t.rEarned = (exit - t.ent) / (t.ent - t.origSl);
+            t.r = (exit - t.ent) / (t.ent - t.sl);
+            if(t.r > 0.1) t.status = 'Win';
+            else if(t.r < -0.1) t.status = 'Loss';
+            else t.status = 'BE';
             save();
         }
 
-        function save() {
-            localStorage.setItem('affan_os_db', JSON.stringify(trades));
-            refresh();
-        }
+        function save() { localStorage.setItem('affan_pro_db', JSON.stringify(trades)); refresh(); }
+        function saveSet() { riskR = document.getElementById('cfg-r').value; localStorage.setItem('affan_risk_r', riskR); refresh(); }
+        function reset() { if(confirm("Clear All?")) { localStorage.clear(); location.reload(); } }
 
         function refresh() {
-            const body = document.getElementById('tradeBody');
-            body.innerHTML = '';
-            
-            let tor = 0, closed = 0, wins = 0, sumW = 0, sumL = 0;
+            const logBody = document.getElementById('logBody');
+            logBody.innerHTML = '';
+            let winR = 0, lossR = 0, closed = 0, openTor = 0, winCount = 0;
 
             trades.forEach(t => {
-                if(t.status === 'Open') {
-                    // TOR calculation: (Entry - Current SL) * Qty / RiskR
-                    tor += ((t.ent - t.sl) * t.qty) / configR;
-                } else {
+                if(t.status === 'Open') openTor += 1;
+                else {
                     closed++;
-                    if(t.rEarned > 0) { wins++; sumW += t.rEarned; }
-                    else { sumL += Math.abs(t.rEarned); }
+                    if(t.r > 0) { winCount++; winR += t.r; }
+                    else { lossR += Math.abs(t.r); }
                 }
-
-                body.innerHTML += `
-                    <tr>
-                        <td>${t.date}</td>
-                        <td><b>${t.sym}</b></td>
-                        <td style="color:var(--text-dim)">₹${t.posSize.toLocaleString()}</td>
-                        <td>${t.qty}</td>
-                        <td>${t.ent}</td>
-                        <td style="color:${t.isRf ? 'var(--warning)' : 'var(--danger)'}">${t.sl}</td>
-                        <td><span class="badge ${t.status==='Open' ? (t.isRf ? 'bg-rf' : '') : (t.status==='Win' ? 'bg-win' : 'bg-loss')}">${t.status} ${t.isRf ? '(RF)' : ''}</span></td>
-                        <td>${t.exit || '-'}</td>
-                        <td style="color:${t.rEarned >= 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:bold">${t.rEarned.toFixed(2)}R</td>
-                        <td>
-                            ${t.status === 'Open' ? `<button onclick="toggleRf(${t.id})" style="background:none; border:1px solid var(--border); color:var(--text); padding:3px 6px; cursor:pointer; margin-right:5px">RF</button>` : ''}
-                            ${t.status === 'Open' ? `<button onclick="closeTrade(${t.id})" style="background:none; border:1px solid var(--border); color:var(--text); padding:3px 6px; cursor:pointer">Close</button>` : ''}
-                            <i class="fas fa-trash" onclick="del(${t.id})" style="margin-left:10px; cursor:pointer; color:var(--text-dim)"></i>
-                        </td>
-                    </tr>
-                `;
+                logBody.innerHTML += `<tr><td>${t.date}</td><td>${t.sym}</td><td>${t.ent}</td><td>${t.sl}</td><td>${t.status}</td><td>${t.exit||'-'}</td><td class="${t.r>=0?'win-text':'loss-text'}">${t.r.toFixed(2)}</td><td><button onclick="closeTrade(${t.id})">Close</button></td></tr>`;
             });
 
-            const wr = closed > 0 ? (wins / closed) : 0;
-            const avgG = wins > 0 ? (sumW / wins) : 0;
-            const avgL = (closed - wins) > 0 ? (sumL / (closed - wins)) : 1;
-            const exp = (wr * avgG) - ((1 - wr) * avgL);
-            const intensity = exp * closed * configR;
+            const wr = closed > 0 ? (winCount / closed) : 0;
+            const exp = (wr * (winR/winCount||0)) - ((1-wr) * (lossR/(closed-winCount)||0));
+            document.getElementById('t-wr').innerText = (wr*100).toFixed(1) + "%";
+            document.getElementById('t-exp').innerText = exp.toFixed(2) + "R";
+            document.getElementById('t-int').innerText = (exp * closed).toFixed(2) + "R";
+            document.getElementById('t-tor').innerText = openTor.toFixed(2) + "R";
+            document.getElementById('t-profit').innerText = "₹" + Math.floor(exp * closed * riskR).toLocaleString();
+            document.getElementById('d-exp').innerText = exp.toFixed(2) + "R";
+            document.getElementById('health').innerText = exp > 0.5 ? "GOD MODE" : (exp > 0 ? "PROFITABLE" : "LOSING");
 
-            document.getElementById('top-wr').innerText = (wr * 100).toFixed(1) + "%";
-            document.getElementById('top-exp').innerText = exp.toFixed(2) + "R";
-            document.getElementById('top-tor').innerText = tor.toFixed(2) + "R";
-            document.getElementById('top-arr').innerText = (avgG / avgL).toFixed(2);
-            document.getElementById('top-int').innerText = "₹" + Math.floor(intensity).toLocaleString();
-            document.getElementById('dash-exp-big').innerText = exp.toFixed(2) + "R";
-
-            const hMsg = document.getElementById('health-msg');
-            if(exp > 0.5) hMsg.innerText = "Affan, system accuracy is Excellent. Increase your trade intensity.";
-            else if (exp > 0) hMsg.innerText = "You have an edge. Follow the process.";
-            else hMsg.innerText = "System is losing money. Stop trading and fix selection rules.";
-
-            buildExcel();
+            buildSummary();
         }
 
-        function buildExcel() {
+        function buildSummary() {
+            const data = {};
+            trades.forEach(t => {
+                if(!t.date) return;
+                const d = new Date(t.date);
+                const q = "Q" + (Math.floor(d.getMonth()/3)+1) + " " + d.getFullYear();
+                if(!data[q]) data[q] = { entered: 0, open: 0, closed: 0, be: 0, win: 0, loss: 0, sumW: 0, sumL: 0, sumR: 0, sumW_money:0, sumL_money:0, sumBE_R:0 };
+                data[q].entered++;
+                if(t.status === 'Open') data[q].open++;
+                else {
+                    data[q].closed++;
+                    if(t.status === 'Win') { data[q].win++; data[q].sumW += t.r; data[q].sumW_money += (t.r * riskR); }
+                    else if(t.status === 'Loss') { data[q].loss++; data[q].sumL += Math.abs(t.r); data[q].sumL_money += (Math.abs(t.r)*riskR); }
+                    else { data[q].be++; data[q].sumBE_R += t.r; }
+                    data[q].sumR += t.r;
+                }
+            });
+
+            const qSorted = Object.keys(data).sort().reverse();
+            const header = document.getElementById('quarterHeader');
+            header.innerHTML = '<th class="label-cell">Metrics View (R Based)</th>';
+            qSorted.forEach(q => header.innerHTML += `<th>${q}</th>`);
+            header.innerHTML += `<th>Average Risk R</th><th>Total Profit</th>`;
+
             const rows = [
-                { name: 'Total Trades', data: [0,0,0,0] },
-                { name: 'Wins (R > 0)', data: [0,0,0,0] },
-                { name: 'Losses (R <= 0)', data: [0,0,0,0] },
-                { name: 'Avg R Gain', data: [0,0,0,0] },
-                { name: 'Total Profit (₹)', data: [0,0,0,0] }
+                { lab: "Trades Entered", key: "entered" },
+                { lab: "Open Till Date", key: "open" },
+                { lab: "Trades Closed", key: "closed" },
+                { lab: "Breakeven", key: "be", cls:"be-text" },
+                { lab: "Winners + Losers", fn: q => data[q].win + data[q].loss },
+                { lab: "Winners", key: "win", cls:"win-text" },
+                { lab: "Losers", key: "loss", cls:"loss-text" },
+                { lab: "Win Rate", fn: q => (data[q].win/data[q].closed*100||0).toFixed(0) + "%" },
+                { lab: "Avg Loss (Losers)", fn: q => "₹" + (data[q].sumL_money/data[q].loss||0).toFixed(0), cls:"loss-text" },
+                { lab: "Avg Gain (Winners)", fn: q => "₹" + (data[q].sumW_money/data[q].win||0).toFixed(0), cls:"win-text" },
+                { lab: "Avg R Loss (Losers)", fn: q => "-" + (data[q].sumL/data[q].loss||0).toFixed(2), cls:"loss-text" },
+                { lab: "Avg R Gain (Winners)", fn: q => (data[q].sumW/data[q].win||0).toFixed(2), cls:"win-text" },
+                { lab: "ARR", fn: q => ((data[q].sumW/data[q].win)/(data[q].sumL/data[q].loss)||0).toFixed(2) },
+                { lab: "Avg R Loss (BE)", fn: q => (data[q].sumBE_R/data[q].be||0).toFixed(2), cls:"be-text" },
+                { lab: "Trade Expectancy (in R)", fn: q => (data[q].sumR/data[q].closed||0).toFixed(2), cls:"win-text" },
+                { lab: "Total R Gained", key: "sumR", fn: q => data[q].sumR.toFixed(2), cls:"win-text" }
             ];
 
-            const qR = [[],[],[],[]]; // to store R values for averaging
-
-            trades.forEach(t => {
-                if(t.status === 'Open') return;
-                const q = Math.floor(new Date(t.date).getMonth() / 3);
-                rows[0].data[q]++;
-                if(t.rEarned > 0) { rows[1].data[q]++; qR[q].push(t.rEarned); }
-                else rows[2].data[q]++;
-                rows[4].data[q] += (t.rEarned * configR);
-            });
-
-            qR.forEach((arr, i) => {
-                if(arr.length > 0) rows[3].data[i] = (arr.reduce((a,b)=>a+b,0) / arr.length).toFixed(2);
-            });
-
-            const sBody = document.getElementById('sumBody');
-            sBody.innerHTML = '';
+            const body = document.getElementById('summaryBody');
+            body.innerHTML = '';
             rows.forEach(r => {
-                let html = `<tr><td class="row-label">${r.name}</td>`;
-                r.data.forEach(val => {
-                    html += `<td>${typeof val === 'number' && r.name.includes('₹') ? '₹'+val.toLocaleString() : val}</td>`;
+                let html = `<tr><td class="label-cell">${r.lab}</td>`;
+                let totalAll = 0;
+                qSorted.forEach(q => {
+                    let val = r.fn ? r.fn(q) : data[q][r.key];
+                    html += `<td class="${r.cls||''}">${val}</td>`;
+                    totalAll += (typeof data[q][r.key] === 'number' ? data[q][r.key] : 0);
                 });
-                sBody.innerHTML += html + `</tr>`;
+                // NEW COLUMNS
+                if(r.lab === "Total R Gained") {
+                    html += `<td>${riskR}</td><td class="win-text">₹${(totalAll * riskR).toLocaleString()}</td>`;
+                } else {
+                    html += `<td>-</td><td>-</td>`;
+                }
+                html += `</tr>`;
+                body.innerHTML += html;
             });
         }
 
-        function saveSettings() {
-            configR = document.getElementById('cfg-risk').value;
-            localStorage.setItem('affan_r_val', configR);
-            alert("Risk R updated!");
-            refresh();
-        }
-
-        function del(id) {
-            if(confirm("Delete this trade?")) {
-                trades = trades.filter(t => t.id !== id);
-                save();
-            }
-        }
-
-        function clearDb() {
-            if(confirm("⚠️ Affan, are you sure you want to clear ALL data?")) {
-                localStorage.clear();
-                location.reload();
-            }
+        function exportXLS() {
+            let table = document.getElementById("xlsTable");
+            let html = table.outerHTML;
+            window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
         }
 
         refresh();
