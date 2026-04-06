@@ -3,107 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Affan's Professional Journal v3.0</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <title>Affan's Pro Journal v4.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --bg: #0d1117; --sidebar: #161b22; --card: #0d1117; --border: #30363d;
+            --bg: #0d1117; --sidebar: #161b22; --border: #30363d; --card: #0d1117;
             --primary: #58a6ff; --success: #3fb950; --danger: #f85149; --warning: #d29922;
-            --text: #c9d1d9; --text-dim: #8b949e; --row-alt: #1c2128;
+            --text: #c9d1d9; --text-dim: #8b949e;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
 
-        /* Mobile Sidebar Toggle */
-        .menu-toggle { display: none; position: fixed; top: 15px; left: 15px; z-index: 1001; background: var(--primary); color: #000; padding: 10px; border-radius: 5px; cursor: pointer; }
+        /* Sidebar Toggle for Mobile */
+        .mobile-nav { display: none; position: fixed; top: 15px; left: 15px; z-index: 1100; background: var(--primary); color: #000; padding: 8px; border-radius: 4px; cursor: pointer; }
 
-        /* Sidebar Area */
-        aside { 
-            width: 260px; background: var(--sidebar); border-right: 1px solid var(--border); 
-            padding: 20px; display: flex; flex-direction: column; transition: 0.3s ease;
-            z-index: 1000;
-        }
-        .brand { font-family: 'Poppins', sans-serif; color: var(--primary); font-size: 18px; margin-bottom: 30px; text-align: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-        .nav-item { padding: 12px 15px; border-radius: 8px; cursor: pointer; color: var(--text-dim); display: flex; align-items: center; gap: 12px; margin-bottom: 8px; font-size: 14px; }
-        .nav-item:hover, .nav-item.active { background: #21262d; color: var(--primary); border: 1px solid var(--border); }
+        /* Sidebar */
+        aside { width: 240px; background: var(--sidebar); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; transition: 0.3s; z-index: 1000; }
+        .brand { color: var(--primary); font-weight: 800; font-size: 16px; margin-bottom: 30px; letter-spacing: 1px; text-align: center; }
+        .nav-item { padding: 12px; border-radius: 6px; cursor: pointer; color: var(--text-dim); display: flex; align-items: center; gap: 10px; font-size: 14px; margin-bottom: 5px; }
+        .nav-item:hover, .nav-item.active { background: #21262d; color: var(--primary); }
 
-        /* Main Content Area */
-        main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: var(--bg); position: relative; }
-        .top-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; padding: 20px; background: #010409; border-bottom: 1px solid var(--border); }
-        .stat-card { background: var(--card); padding: 15px; border-radius: 6px; border: 1px solid var(--border); text-align: center; }
-        .stat-card span { font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 5px; }
-        .stat-card div { font-size: 18px; font-weight: 700; }
+        /* Main Area */
+        main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 20px; gap: 20px; }
+        
+        /* Top Navigation (Like Image) */
+        .top-nav { display: flex; align-items: center; justify-content: space-between; background: var(--sidebar); padding: 10px 20px; border-radius: 8px; border: 1px solid var(--border); }
+        .tabs { display: flex; gap: 20px; }
+        .tab { color: var(--text-dim); cursor: pointer; font-size: 13px; font-weight: 500; padding: 5px 10px; border-radius: 4px; }
+        .tab.active { color: #fff; background: #30363d; }
+        .actions { display: flex; gap: 15px; align-items: center; }
+        .btn-icon { color: var(--text-dim); cursor: pointer; font-size: 14px; }
+        .btn-trade { background: #fff; color: #000; padding: 6px 15px; border-radius: 4px; font-weight: 600; font-size: 12px; border: none; cursor: pointer; }
 
-        .section { padding: 20px; display: none; }
-        .section.active { display: block; }
+        /* Summary Section (The Matrix) */
+        .table-container { background: var(--sidebar); border-radius: 8px; border: 1px solid var(--border); overflow-x: auto; padding: 10px; }
+        .matrix-header { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+        .matrix-view-btn { background: #21262d; color: var(--text-dim); padding: 5px 10px; border-radius: 4px; font-size: 12px; border: 1px solid var(--border); }
 
-        /* TABLE - IMAGE MATCH A to Z */
-        .summary-table-wrap { overflow-x: auto; margin-top: 20px; }
-        .summary-table { width: 100%; border-collapse: collapse; min-width: 900px; font-size: 12px; background: #0d1117; }
-        .summary-table th { background: #161b22; color: var(--primary); padding: 12px; border: 1px solid var(--border); text-align: center; }
-        .summary-table td { padding: 10px; border: 1px solid var(--border); text-align: center; font-weight: 500; }
-        .label-cell { text-align: left !important; background: #161b22; color: var(--text-dim); font-weight: 600; width: 220px; }
-        .win-text { color: var(--success); }
-        .loss-text { color: var(--danger); }
-        .be-text { color: var(--warning); }
-        .zebra tr:nth-child(even) { background: #11161d; }
+        .pro-table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 800px; }
+        .pro-table th { padding: 12px; border: 1px solid var(--border); text-align: center; background: #161b22; color: var(--text-dim); }
+        .pro-table td { padding: 10px; border: 1px solid var(--border); text-align: center; }
+        .label-cell { text-align: left !important; background: #161b22; color: var(--text-dim); font-weight: 600; width: 200px; }
+        
+        /* Colors from Image */
+        .win { color: var(--success); }
+        .loss { color: var(--danger); }
+        .be { color: var(--warning); }
+        .highlight-row { background: #1c2128; font-weight: 700; }
 
-        /* FORMS */
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; background: var(--sidebar); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; }
-        input, select { background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 10px; border-radius: 4px; width: 100%; outline: none; }
-        .btn-p { background: var(--primary); color: #000; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 700; }
+        /* Trade Form */
+        .form-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; background: var(--sidebar); padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
+        input { background: var(--bg); border: 1px solid var(--border); color: #fff; padding: 8px; border-radius: 4px; font-size: 12px; width: 100%; }
 
-        /* Mobile View Sidebar Fix */
         @media (max-width: 768px) {
-            aside { position: fixed; left: -260px; height: 100%; }
+            aside { position: fixed; left: -240px; height: 100%; }
             aside.open { left: 0; }
-            .menu-toggle { display: block; }
-            .top-bar { grid-template-columns: 1fr 1fr; margin-top: 50px; }
-            .label-cell { width: 150px; }
+            .mobile-nav { display: block; }
+            .top-nav { flex-direction: column; gap: 10px; margin-top: 40px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="menu-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
+    <div class="mobile-nav" onclick="toggleSidebar()"><i class="fas fa-bars"></i></div>
 
     <aside id="sidebar">
-        <div class="brand">AFFAN'S OS v3.0</div>
-        <div class="nav-item active" onclick="tab('dash')"><i class="fas fa-dashboard"></i> Dashboard</div>
-        <div class="nav-item" onclick="tab('logs')"><i class="fas fa-list"></i> Trade Logs</div>
-        <div class="nav-item" onclick="tab('sum')"><i class="fas fa-table"></i> Summary (A-Z)</div>
-        <div class="nav-item" onclick="tab('set')"><i class="fas fa-cog"></i> Settings</div>
-        <div style="margin-top:auto">
-            <button class="nav-item" style="background:none; width:100%;" onclick="exportXLS()"><i class="fas fa-file-excel"></i> Export to XLS</button>
-        </div>
+        <div class="brand">CHAMPION OS v4.0</div>
+        <div class="nav-item active" onclick="show('sum')"><i class="fas fa-table"></i> Summary</div>
+        <div class="nav-item" onclick="show('logs')"><i class="fas fa-list"></i> Trade Logs</div>
+        <div class="nav-item" onclick="show('set')"><i class="fas fa-cog"></i> Settings</div>
     </aside>
 
     <main>
-        <div class="top-bar">
-            <div class="stat-card"><span>Win Rate</span><div id="t-wr">0%</div></div>
-            <div class="stat-card"><span>Expectancy</span><div id="t-exp">0.00R</div></div>
-            <div class="stat-card"><span>Intensity</span><div id="t-int">0.00R</div></div>
-            <div class="stat-card"><span>Total TOR</span><div id="t-tor">0.00R</div></div>
-            <div class="stat-card"><span>Net Profit</span><div id="t-profit" class="win-text">₹0</div></div>
+        <!-- Top Nav - Exactly like Image -->
+        <div class="top-nav">
+            <div class="tabs">
+                <div class="tab">Monthly</div>
+                <div class="tab active">Quarterly</div>
+                <div class="tab">Yearly</div>
+            </div>
+            <div class="actions">
+                <i class="fas fa-question-circle btn-icon"></i> Help
+                <i class="fas fa-file-export btn-icon" onclick="exportData()"></i> Export
+                <i class="fas fa-cog btn-icon"></i> Settings
+                <button class="btn-trade" onclick="show('logs')">+ Trade</button>
+            </div>
         </div>
 
-        <!-- TRADE LOGS -->
-        <section id="logs" class="section">
-            <div class="form-grid">
-                <div><label style="font-size:10px">DATE</label><input type="date" id="date"></div>
-                <div><label style="font-size:10px">SYMBOL</label><input type="text" id="sym" placeholder="Stock"></div>
-                <div><label style="font-size:10px">ENTRY</label><input type="number" id="ent"></div>
-                <div><label style="font-size:10px">SL</label><input type="number" id="sl"></div>
-                <div><label style="font-size:10px">TARGET</label><input type="number" id="tg"></div>
-                <button class="btn-p" style="margin-top:15px" onclick="addTrade()">RECORD</button>
+        <!-- Summary Section (A-Z Image Match) -->
+        <section id="sum" class="section">
+            <div class="table-container">
+                <div class="matrix-header">
+                    <button class="matrix-view-btn">Metrics View (R Based) <i class="fas fa-chevron-down"></i></button>
+                    <span style="font-size: 12px; color: var(--text-dim);">Sample Journal</span>
+                </div>
+                <table class="pro-table">
+                    <thead>
+                        <tr id="qHeader">
+                            <th class="label-cell">Quarters</th>
+                            <!-- Quarters will be injected -->
+                        </tr>
+                    </thead>
+                    <tbody id="matrixBody">
+                        <!-- Image Rows will be injected -->
+                    </tbody>
+                </table>
             </div>
-            <div style="overflow-x:auto">
-                <table class="summary-table zebra">
+        </section>
+
+        <!-- Trade Logs -->
+        <section id="logs" class="section" style="display:none">
+            <div class="form-box">
+                <input type="date" id="date">
+                <input type="text" id="sym" placeholder="Symbol">
+                <input type="number" id="ent" placeholder="Entry">
+                <input type="number" id="sl" placeholder="SL">
+                <input type="number" id="tg" placeholder="Target">
+                <button class="btn-trade" onclick="addTrade()">Record</button>
+            </div>
+            <div class="table-container" style="margin-top:15px">
+                <table class="pro-table">
                     <thead>
                         <tr>
-                            <th>DATE</th><th>SYMBOL</th><th>ENTRY</th><th>SL</th><th>STATUS</th><th>EXIT</th><th>R-EARNED</th><th>ACTION</th>
+                            <th>Date</th><th>Symbol</th><th>Pos. Size (₹)</th><th>Qty</th><th>Status</th><th>R</th><th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="logBody"></tbody>
@@ -111,54 +135,24 @@
             </div>
         </section>
 
-        <!-- DASHBOARD -->
-        <section id="dash" class="section active">
-            <div style="background:var(--sidebar); padding:30px; border-radius:12px; border:1px solid var(--border); text-align:center">
-                <h2 style="color:var(--primary)">Welcome, Champion Affan</h2>
-                <p style="margin-top:10px; color:var(--text-dim)">Tera system abhi <b id="health">...</b> par chal raha hai.</p>
-                <div style="font-size:50px; margin-top:20px" id="d-exp">0.00R</div>
-                <span style="font-size:12px; color:var(--text-dim)">Trade Expectancy (In R)</span>
+        <!-- Settings -->
+        <section id="set" class="section" style="display:none">
+            <div class="form-box" style="max-width:300px">
+                <label style="font-size:12px">Risk Per Trade (₹)</label>
+                <input type="number" id="cfgR" value="1000">
+                <button class="btn-trade" onclick="saveSet()">Save</button>
             </div>
-        </section>
-
-        <!-- SUMMARY PAGE (EXACT IMAGE MATCH) -->
-        <section id="sum" class="section">
-            <div class="summary-table-wrap">
-                <table class="summary-table zebra" id="xlsTable">
-                    <thead>
-                        <tr id="quarterHeader">
-                            <th class="label-cell">Metrics View (R Based)</th>
-                            <!-- Quarters will be injected -->
-                        </tr>
-                    </thead>
-                    <tbody id="summaryBody">
-                        <!-- EXACT MATCH ROWS -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- SETTINGS -->
-        <section id="set" class="section">
-            <div class="form-grid" style="max-width:400px">
-                <div><label>DEFAULT RISK R (₹)</label><input type="number" id="cfg-r" value="1000"></div>
-                <button class="btn-p" onclick="saveSet()">SAVE SETTINGS</button>
-            </div>
-            <button class="btn-p" style="background:var(--danger); color:white" onclick="reset()">RESET DATABASE</button>
         </section>
     </main>
 
     <script>
-        let trades = JSON.parse(localStorage.getItem('affan_pro_db')) || [];
-        let riskR = localStorage.getItem('affan_risk_r') || 1000;
+        let trades = JSON.parse(localStorage.getItem('affan_db_v4')) || [];
+        let riskR = localStorage.getItem('affan_risk_v4') || 1000;
 
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
-
-        function tab(id) {
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            event.currentTarget.classList.add('active');
+        function show(id) {
+            document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
             refresh();
         }
 
@@ -168,129 +162,108 @@
             const ent = parseFloat(document.getElementById('ent').value);
             const sl = parseFloat(document.getElementById('sl').value);
             const tg = parseFloat(document.getElementById('tg').value);
-            if(!sym || !ent || !sl) return alert("Details bharo!");
+            if(!sym || !ent || !sl) return;
 
             const qty = Math.floor(riskR / (ent - sl));
-            trades.push({ id: Date.now(), date, sym, ent, sl, tg, qty, status: 'Open', exit: 0, r: 0 });
+            trades.push({ id: Date.now(), date, sym, ent, sl, tg, qty, status: 'Open', exit: 0, r: 0, isRF: false, origSL: sl });
+            save();
+        }
+
+        function toggleRF(id) {
+            const t = trades.find(t => t.id === id);
+            t.isRF = !t.isRF;
+            t.sl = t.isRF ? t.ent : t.origSL;
             save();
         }
 
         function closeTrade(id) {
             const exit = parseFloat(prompt("Exit Price?"));
             if(isNaN(exit)) return;
-            const idx = trades.findIndex(t => t.id === id);
-            const t = trades[idx];
+            const t = trades.find(t => t.id === id);
             t.exit = exit;
-            t.r = (exit - t.ent) / (t.ent - t.sl);
-            if(t.r > 0.1) t.status = 'Win';
-            else if(t.r < -0.1) t.status = 'Loss';
-            else t.status = 'BE';
+            t.r = (exit - t.ent) / (t.ent - t.origSL);
+            t.status = t.r > 0.1 ? 'Win' : (t.r < -0.1 ? 'Loss' : 'BE');
             save();
         }
 
-        function save() { localStorage.setItem('affan_pro_db', JSON.stringify(trades)); refresh(); }
-        function saveSet() { riskR = document.getElementById('cfg-r').value; localStorage.setItem('affan_risk_r', riskR); refresh(); }
-        function reset() { if(confirm("Clear All?")) { localStorage.clear(); location.reload(); } }
+        function save() { localStorage.setItem('affan_db_v4', JSON.stringify(trades)); refresh(); }
+        function saveSet() { riskR = document.getElementById('cfgR').value; localStorage.setItem('affan_risk_v4', riskR); refresh(); }
 
         function refresh() {
             const logBody = document.getElementById('logBody');
             logBody.innerHTML = '';
-            let winR = 0, lossR = 0, closed = 0, openTor = 0, winCount = 0;
-
             trades.forEach(t => {
-                if(t.status === 'Open') openTor += 1;
-                else {
-                    closed++;
-                    if(t.r > 0) { winCount++; winR += t.r; }
-                    else { lossR += Math.abs(t.r); }
-                }
-                logBody.innerHTML += `<tr><td>${t.date}</td><td>${t.sym}</td><td>${t.ent}</td><td>${t.sl}</td><td>${t.status}</td><td>${t.exit||'-'}</td><td class="${t.r>=0?'win-text':'loss-text'}">${t.r.toFixed(2)}</td><td><button onclick="closeTrade(${t.id})">Close</button></td></tr>`;
+                const posSize = t.qty * t.ent;
+                logBody.innerHTML += `
+                <tr>
+                    <td>${t.date}</td><td>${t.sym}</td><td>₹${posSize.toLocaleString()}</td><td>${t.qty}</td>
+                    <td><span class="${t.status==='Win'?'win':(t.status==='Loss'?'loss':'be')}">${t.status}</span></td>
+                    <td class="${t.r>=0?'win':'loss'}">${t.r.toFixed(2)}R</td>
+                    <td>
+                        <button onclick="toggleRF(${t.id})" style="font-size:10px">${t.isRF?'Undo RF':'Risk Free'}</button>
+                        <button onclick="closeTrade(${t.id})" style="font-size:10px">Close</button>
+                    </td>
+                </tr>`;
             });
-
-            const wr = closed > 0 ? (winCount / closed) : 0;
-            const exp = (wr * (winR/winCount||0)) - ((1-wr) * (lossR/(closed-winCount)||0));
-            document.getElementById('t-wr').innerText = (wr*100).toFixed(1) + "%";
-            document.getElementById('t-exp').innerText = exp.toFixed(2) + "R";
-            document.getElementById('t-int').innerText = (exp * closed).toFixed(2) + "R";
-            document.getElementById('t-tor').innerText = openTor.toFixed(2) + "R";
-            document.getElementById('t-profit').innerText = "₹" + Math.floor(exp * closed * riskR).toLocaleString();
-            document.getElementById('d-exp').innerText = exp.toFixed(2) + "R";
-            document.getElementById('health').innerText = exp > 0.5 ? "GOD MODE" : (exp > 0 ? "PROFITABLE" : "LOSING");
-
-            buildSummary();
+            buildMatrix();
         }
 
-        function buildSummary() {
-            const data = {};
+        function buildMatrix() {
+            const qData = {};
             trades.forEach(t => {
-                if(!t.date) return;
                 const d = new Date(t.date);
                 const q = "Q" + (Math.floor(d.getMonth()/3)+1) + " " + d.getFullYear();
-                if(!data[q]) data[q] = { entered: 0, open: 0, closed: 0, be: 0, win: 0, loss: 0, sumW: 0, sumL: 0, sumR: 0, sumW_money:0, sumL_money:0, sumBE_R:0 };
-                data[q].entered++;
-                if(t.status === 'Open') data[q].open++;
+                if(!qData[q]) qData[q] = { entered:0, open:0, closed:0, be:0, win:0, loss:0, sumW:0, sumL:0, totalR:0 };
+                qData[q].entered++;
+                if(t.status === 'Open') qData[q].open++;
                 else {
-                    data[q].closed++;
-                    if(t.status === 'Win') { data[q].win++; data[q].sumW += t.r; data[q].sumW_money += (t.r * riskR); }
-                    else if(t.status === 'Loss') { data[q].loss++; data[q].sumL += Math.abs(t.r); data[q].sumL_money += (Math.abs(t.r)*riskR); }
-                    else { data[q].be++; data[q].sumBE_R += t.r; }
-                    data[q].sumR += t.r;
+                    qData[q].closed++;
+                    if(t.status === 'Win') { qData[q].win++; qData[q].sumW += t.r; }
+                    else if(t.status === 'Loss') { qData[q].loss++; qData[q].sumL += Math.abs(t.r); }
+                    else qData[q].be++;
+                    qData[q].totalR += t.r;
                 }
             });
 
-            const qSorted = Object.keys(data).sort().reverse();
-            const header = document.getElementById('quarterHeader');
-            header.innerHTML = '<th class="label-cell">Metrics View (R Based)</th>';
-            qSorted.forEach(q => header.innerHTML += `<th>${q}</th>`);
-            header.innerHTML += `<th>Average Risk R</th><th>Total Profit</th>`;
+            const qSorted = Object.keys(qData).sort().reverse();
+            document.getElementById('qHeader').innerHTML = '<th class="label-cell">Metrics View (R Based)</th>' + qSorted.map(q => `<th>${q}</th>`).join('');
 
             const rows = [
-                { lab: "Trades Entered", key: "entered" },
-                { lab: "Open Till Date", key: "open" },
-                { lab: "Trades Closed", key: "closed" },
-                { lab: "Breakeven", key: "be", cls:"be-text" },
-                { lab: "Winners + Losers", fn: q => data[q].win + data[q].loss },
-                { lab: "Winners", key: "win", cls:"win-text" },
-                { lab: "Losers", key: "loss", cls:"loss-text" },
-                { lab: "Win Rate", fn: q => (data[q].win/data[q].closed*100||0).toFixed(0) + "%" },
-                { lab: "Avg Loss (Losers)", fn: q => "₹" + (data[q].sumL_money/data[q].loss||0).toFixed(0), cls:"loss-text" },
-                { lab: "Avg Gain (Winners)", fn: q => "₹" + (data[q].sumW_money/data[q].win||0).toFixed(0), cls:"win-text" },
-                { lab: "Avg R Loss (Losers)", fn: q => "-" + (data[q].sumL/data[q].loss||0).toFixed(2), cls:"loss-text" },
-                { lab: "Avg R Gain (Winners)", fn: q => (data[q].sumW/data[q].win||0).toFixed(2), cls:"win-text" },
-                { lab: "ARR", fn: q => ((data[q].sumW/data[q].win)/(data[q].sumL/data[q].loss)||0).toFixed(2) },
-                { lab: "Avg R Loss (BE)", fn: q => (data[q].sumBE_R/data[q].be||0).toFixed(2), cls:"be-text" },
-                { lab: "Trade Expectancy (in R)", fn: q => (data[q].sumR/data[q].closed||0).toFixed(2), cls:"win-text" },
-                { lab: "Total R Gained", key: "sumR", fn: q => data[q].sumR.toFixed(2), cls:"win-text" }
+                { l: "Trades Entered", k: "entered" },
+                { l: "Open Till Date", k: "open" },
+                { l: "Trades Closed", k: "closed" },
+                { l: "Breakeven", k: "be", c: "be" },
+                { l: "Winners + Losers", f: q => qData[q].win + qData[q].loss },
+                { l: "Winners", k: "win", c: "win" },
+                { l: "Losers", k: "loss", c: "loss" },
+                { l: "Win Rate", f: q => (qData[q].win / qData[q].closed * 100 || 0).toFixed(0) + "%" },
+                { l: "Avg Loss (Losers)", f: q => "-" + (qData[q].sumL / qData[q].loss || 0).toFixed(2), c: "loss" },
+                { l: "Avg Gain (Winners)", f: q => (qData[q].sumW / qData[q].win || 0).toFixed(2), c: "win" },
+                { l: "Avg R Loss (Losers)", f: q => "-" + (qData[q].sumL / qData[q].loss || 0).toFixed(2), c: "loss" },
+                { l: "Avg R Gain (Winners)", f: q => (qData[q].sumW / qData[q].win || 0).toFixed(2), c: "win" },
+                { l: "ARR", f: q => ((qData[q].sumW / qData[q].win) / (qData[q].sumL / qData[q].loss) || 0).toFixed(2) },
+                { l: "Avg R Loss (BE)", f: q => (0).toFixed(2), c: "be" },
+                { l: "Trade Expectancy (in R)", f: q => (qData[q].totalR / qData[q].closed || 0).toFixed(2), c: "win" },
+                { l: "Total R Gained", f: q => qData[q].totalR.toFixed(2), c: "win" },
+                { l: "Average Risk R", f: q => riskR, isPro: true },
+                { l: "Total Profit", f: q => "₹" + Math.floor(qData[q].totalR * riskR).toLocaleString(), isPro: true, c: "win" }
             ];
 
-            const body = document.getElementById('summaryBody');
-            body.innerHTML = '';
-            rows.forEach(r => {
-                let html = `<tr><td class="label-cell">${r.lab}</td>`;
-                let totalAll = 0;
-                qSorted.forEach(q => {
-                    let val = r.fn ? r.fn(q) : data[q][r.key];
-                    html += `<td class="${r.cls||''}">${val}</td>`;
-                    totalAll += (typeof data[q][r.key] === 'number' ? data[q][r.key] : 0);
-                });
-                // NEW COLUMNS
-                if(r.lab === "Total R Gained") {
-                    html += `<td>${riskR}</td><td class="win-text">₹${(totalAll * riskR).toLocaleString()}</td>`;
-                } else {
-                    html += `<td>-</td><td>-</td>`;
-                }
-                html += `</tr>`;
-                body.innerHTML += html;
-            });
+            const mBody = document.getElementById('matrixBody');
+            mBody.innerHTML = rows.map(r => `
+                <tr class="${r.isPro ? 'highlight-row' : ''}">
+                    <td class="label-cell">${r.l}</td>
+                    ${qSorted.map(q => `<td class="${r.c || ''}">${r.f ? r.f(q) : qData[q][r.k]}</td>`).join('')}
+                </tr>
+            `).join('');
         }
 
-        function exportXLS() {
-            let table = document.getElementById("xlsTable");
-            let html = table.outerHTML;
+        function exportData() {
+            let html = document.getElementById("sum").innerHTML;
             window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
         }
 
-        refresh();
+        show('sum');
     </script>
 </body>
 </html>
